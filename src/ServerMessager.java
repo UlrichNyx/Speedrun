@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.time.LocalDate;
 public class ServerMessager
 {
 	private Socket server;
@@ -90,6 +91,54 @@ public class ServerMessager
         t.run();
         return t.getValidation();
     }
+
+    public boolean saveProject(Project prj)
+    {
+        out.println("[SAVE_PROJECT] " + prj.getName() + " [ " + prj.getDescription()  + " ] " + prj.getBeginDate().toString() + " " +  prj.getEndDate().toString() + " " + prj.getTeam().getTeamString()); out.flush();
+        ResponseThread t = new ResponseThread(this.server, "ACCEPTED");
+        t.run();
+        return t.getValidation();
+    }
+
+    public boolean checkProjectExists(Project proj)
+    {
+        String filename = "../inp/user_" + proj.getTeam().getMembers().get(0).getUsername() + "_project_" + proj.getName() + ".txt";
+        out.println("[PROJECT_EXISTS] " + filename);out.flush();
+        ResponseThread t = new ResponseThread(this.server, "ACCEPTED");
+        t.run();
+        return t.getValidation();
+    }
+
+    public ArrayList<String> getAllProjects(String username)
+    {
+        out.println("[GET_PROJECTS] " + username);out.flush();
+        ResponseThread t = new ResponseThread(this.server, "ACCEPTED");
+        t.run();
+        ArrayList<String> toReturn = new ArrayList<String>();
+        for(String s : t.getValue().split(" "))
+        {
+            toReturn.add(s);
+        }
+        return toReturn;
+    }
+
+    public Project loadProject(String projectName)
+    {
+        out.println("[LOAD_PROJECT] " + projectName); out.flush();
+        ResponseThread t = new ResponseThread(this.server, "ACCEPTED");
+        t.run();
+        String description = t.getValue().split("\\]")[0].split("\\[")[1];
+        String teamString = t.getValue().split("\\]")[1].split("\\[")[1];
+        String beginDate = t.getValue().split(" ")[t.getValue().split(" ").length - 2];
+        String endDate = t.getValue().split(" ")[t.getValue().split(" ").length - 1];
+        Team team = new Team();
+        for(String s : teamString.split(" "))
+        {
+            team.add(new User(s, ""));
+        }
+        return new Project(t.getValue().split(" ")[0], description, team, LocalDate.parse(beginDate), LocalDate.parse(endDate));
+    }
+
 
 	static class ResponseThread implements Runnable
     {

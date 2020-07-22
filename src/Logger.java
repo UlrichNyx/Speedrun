@@ -26,6 +26,7 @@ import javafx.animation.Animation;
 import javafx.util.Duration;
 import java.util.regex.Matcher; 
 import java.util.regex.Pattern;
+import java.io.File;
 
 public class Logger
 {
@@ -166,7 +167,7 @@ public class Logger
                           Notifications.create()
                           .title("Email sent!")
                           .text("Check your email: " + emailString + " for a 6 digit code.")
-                          .graphic(new ImageView(new Image("email.png")))
+                          .graphic(new ImageView(new Image(new File("../img/email.png").toURI().toString())))
                           .position(Pos.TOP_RIGHT)
                           .show(); 
 
@@ -210,7 +211,7 @@ public class Logger
                                     Notifications.create()
                                     .title("Code expired!")
                                     .text("Your code is no longer valid.")
-                                    .graphic(new ImageView(new Image("hourglassdone.png")))
+                                    .graphic(new ImageView(new Image(new File("../img/hourglassdone.png").toURI().toString())))
                                     .position(Pos.TOP_RIGHT)
                                     .show(); 
                                   }
@@ -413,7 +414,7 @@ public class Logger
                                         Notifications.create()
                                         .title("Password changed succesfully!")
                                         .text("You're good to go.")
-                                        .graphic(new ImageView(new Image("key1.png")))
+                                        .graphic(new ImageView(new Image(new File("../img/key1.png").toURI().toString())))
                                         .position(Pos.TOP_RIGHT)
                                         .show(); 
                                       }
@@ -422,7 +423,7 @@ public class Logger
                                         Notifications.create()
                                         .title("Password change unsuccesful.")
                                         .text("We have encountered an error on our end. Please try again.")
-                                        .graphic(new ImageView(new Image("error.png")))
+                                        .graphic(new ImageView(new Image(new File("../img/error.png").toURI().toString())))
                                         .position(Pos.TOP_RIGHT)
                                         .show();
                                       }
@@ -640,9 +641,9 @@ public class Logger
             @Override
             public void handle(ActionEvent event) {
                 User usr = new User(usernameTF.getText(),passwordTF.getText());
-                // server.requestLogin(usr);
                 if(server.requestedLogin(usr))
                 {
+                  Client.assignUser(usr);
                   if(keepLogged.isSelected())
                   {
                     usr.setLogged("../inp/logged.txt", true);

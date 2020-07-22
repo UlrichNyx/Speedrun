@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.File;
 import org.controlsfx.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
@@ -111,7 +112,7 @@ public class Registrator
                     Notifications.create()
                           .title("Registration complete!")
                           .text("You're good to go.")
-                          .graphic(new ImageView(new Image("scroll.png")))
+                          .graphic(new ImageView(new Image(new File("../img/scroll.png").toURI().toString())))
                           .position(Pos.TOP_RIGHT)
                           .show(); 
                 }
@@ -122,7 +123,7 @@ public class Registrator
                     Notifications.create()
                           .title("Registration unsuccesful!")
                           .text("We have encountered an error on our end. Please try again.")
-                          .graphic(new ImageView(new Image("error.png")))
+                          .graphic(new ImageView(new Image(new File("../img/error.png").toURI().toString())))
                           .position(Pos.TOP_RIGHT)
                           .show(); 
                   }
@@ -179,7 +180,7 @@ public class Registrator
               }
           });
       tf = (new TextFormatter<>(change -> {
-          if (change.getText().equals(" ")) 
+          if (change.getText().equals(" ") || change.getText().equals("[") || change.getText().equals("]")) 
           {
               change.setText("");
           }

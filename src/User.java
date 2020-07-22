@@ -61,26 +61,26 @@ public class User
         return false;
 	}
 
-	public boolean userExists(String filename)
+	public static boolean userExists(String username)
 	{
 		try
 		{
-			FileReader freader = new FileReader(filename);
+			FileReader freader = new FileReader("../inp/users.txt");
 			BufferedReader reader = new BufferedReader(freader);
 			String line;
 			try
 			{
 				while((line = reader.readLine()) != null)
 				{
-					if(line.split(" ")[1].equals(this.username))
+					if(line.split(" ")[1].equals(username))
 					{
 						return true;
 					}
 				}
 				return false;
-			}catch(IOException ioe){System.out.println("IOException while trying to read " + filename); return false;}
+			}catch(IOException ioe){System.out.println("IOException while trying to read " + "../inp/users.txt"); return false;}
 			
-		}catch(FileNotFoundException e){System.out.println("FileNotFoundException while trying to read " + filename); return false;}
+		}catch(FileNotFoundException e){System.out.println("FileNotFoundException while trying to read " + "../inp/users.txt"); return false;}
 		
 		
 	}
@@ -284,5 +284,47 @@ public class User
 			
 		}catch(FileNotFoundException e){System.out.println("FileNotFoundException while trying to write/read to " + filename); return false;}
 
+	}
+
+	public static boolean checkInProject(String username, String projectName)
+	{
+		try
+				{
+					FileReader freader = new FileReader("../inp/usr/" + username);
+					BufferedReader reader = new BufferedReader(freader);
+					String line;
+					try
+					{
+						while((line = reader.readLine()) != null)
+						{
+							if(line.split(" ")[1].equals(projectName))
+							{
+								return true;
+							}
+						}
+						return false;
+					}catch(IOException ioe){System.out.println("IOException while trying to read "); return false;}
+					
+				}catch(FileNotFoundException e){System.out.println("FileNotFoundException while trying to read "); return false;}
+	}
+
+	public static boolean addProject(String username, String projectName)
+	{
+		try
+        {
+        	if(!checkInProject(username, projectName))
+        	{
+        		FileWriter fwriter = new FileWriter("../inp/usr/" + username, true);
+	            BufferedWriter writer = new BufferedWriter(fwriter);
+	            writer.write("Project: " + projectName +"\n");
+	            writer.flush();
+	            return true;
+        	}
+        	else
+        	{
+        		return false;
+        	}
+        }catch(Exception e){System.out.println(e);}
+        return false;
 	}
 }

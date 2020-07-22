@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.*;
 import java.net.*;
+import java.time.LocalDate;
 public class Server
 {
 	public static void main(String [] args)
@@ -60,9 +61,8 @@ public class Server
 					}
 					if(message[0].equals("[USER_EXISTS]"))
 					{
-						User usr = new User(message[1], "");
 
-						if(usr.userExists("../inp/users.txt"))
+						if(User.userExists(message[1]))
 						{
 							out.println("ACCEPTED"); 
 						}
@@ -159,6 +159,85 @@ public class Server
 						if(User.changeUserPassword(message[1], message[2], message[3], "../inp/users.txt"))
 						{
 							out.println("ACCEPTED"); 
+						}
+						else
+						{
+							out.println("DENIED"); 
+						}
+						out.flush();
+					}
+
+					if(message[0].equals("[SAVE_PROJECT]")) 
+					{
+						String description = "";
+						int i = 3;
+
+						while(!message[i].equals("]"))
+						{
+							description += message[i] + " ";
+							i++;
+						}
+
+						int datesBegin = i+1;
+						
+						Team team = new Team();
+						for(i = datesBegin + 2; i < message.length; i++)
+						{
+							team.add(new User(message[i], ""));
+						}
+						Project temp = new Project(message[1], description, team, LocalDate.parse(message[datesBegin]), LocalDate.parse(message[datesBegin + 1]));
+						if(temp.save())
+						{
+							out.println("ACCEPTED"); 
+						}
+						else
+						{
+							out.println("DENIED"); 
+						}
+						out.flush();
+					}
+
+					if(message[0].equals("[PROJECT_EXISTS]"))
+					{
+						if(Project.checkProjectExists(message[1]))
+						{
+							out.println("ACCEPTED"); 
+						}
+						else
+						{
+							out.println("DENIED"); 
+						}
+						out.flush();
+					}
+
+					if(message[0].equals("[GET_PROJECTS]"))
+					{
+						if(Project.getAllProjects(message[1]) != null)
+						{
+							String toPrint = "";
+							for(String u : Project.getAllProjects(message[1]))
+							{
+								toPrint += u + " ";
+							}
+							out.println(toPrint);
+						}
+						else
+						{
+							out.println("DENIED"); 
+						}
+						out.flush();
+					}
+
+					if(message[0].equals("[LOAD_PROJECT]"))
+					{
+						if(Project.loadProject(message[1]) != null)
+						{
+							String toPrint = "";
+							for(String u : Project.loadProject(message[1]))
+							{
+								toPrint += u + " ";
+							}
+							out.println(toPrint);
 						}
 						else
 						{
